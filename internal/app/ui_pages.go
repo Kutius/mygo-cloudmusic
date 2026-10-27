@@ -13,6 +13,9 @@ import (
 
 const pagePad = 40
 
+// cardNameLine is the room a card's name takes for each line of it.
+const cardNameLine = 13 * 1.35
+
 // columns returns how many cards of at least min DIPs fit across the page.
 func (a *app) columns(c *ui.Context, min float32) int {
 	w, _ := c.Size()
@@ -161,7 +164,11 @@ func (a *app) coverCard(c *ui.Context, name, cover string, playCount float64, su
 			}
 			a.coverPlayButton(c, hovered, play)
 		})
-		ui.Text(c, name).FontSize(13).FontWeight(500).MaxLines(2).LineHeight(1.35)
+		// Two lines whether the name needs one or two, so that a row keeps its
+		// covers, names and subtitles on one line each.
+		ui.Box(c).Height(2 * cardNameLine).Children(func() {
+			ui.Text(c, name).FontSize(13).FontWeight(500).MaxLines(2).LineHeight(1.35)
+		})
 		if sub != "" {
 			ui.Text(c, sub).FontSize(12).TextColor(p.muted).SingleLine().Margin(-6, 0, 0, 0)
 		}
