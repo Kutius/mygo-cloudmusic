@@ -65,7 +65,7 @@ func (a *app) captionsPane(c *ui.Context, tr *netease.Track, h float32) {
 		a.lyricScroll, a.lyricGlide = ui.ScrollState{}, lyricGlide{}
 	}
 	lag := a.lyricGlide.step(c, &a.lyricScroll)
-	scroll := ui.Scroll(c.Key("captions")).Grow(1).TrackScroll(&a.lyricScroll).Padding(0, 8, h*0.5, 0)
+	scroll := ui.Scroll(c.Key("captions")).Grow(1).TrackScroll(&a.lyricScroll).Padding(0, paneEnd, h*0.5, 0)
 	a.timedLines(c, scroll, lines, pos, cur, lag, linesStyle{size: 24, weight: 700, lineHeight: 1.4}, func() {
 		if cs.work != nil {
 			ui.Text(c, "正在识别…").FontSize(14).FontWeight(600).TextColor(white.Alpha(0.35)).Padding(16, 12)

@@ -197,7 +197,7 @@ func (a *app) commentsPane(c *ui.Context, tr *netease.Track) {
 		return
 	}
 	now := c.Now()
-	scroll := ui.Scroll(c.Key("comments")).Grow(1).TrackScroll(&cs.scroll).Padding(4, 8, 48, 0)
+	scroll := ui.Scroll(c.Key("comments")).Grow(1).TrackScroll(&cs.scroll).Padding(4, paneEnd, 48, 0)
 	var end ui.Rect
 	scroll.Children(func() {
 		ui.Column(c).Gap(2).Children(func() {
@@ -238,12 +238,16 @@ func (a *app) commentsPane(c *ui.Context, tr *netease.Track) {
 	}
 }
 
+// commentHeading names the comments under it, in the column their words take,
+// past the pictures beside them.
 func commentHeading(c *ui.Context, title string) {
-	ui.Text(c, title).FontSize(13).FontWeight(700).TextColor(white.Alpha(0.55)).LetterSpacing(0.2).Padding(18, 12, 6, 12)
+	ui.Text(c, title).FontSize(13).FontWeight(700).TextColor(white.Alpha(0.55)).LetterSpacing(0.2).Padding(18, 12, 6, 58)
 }
 
 // commentRow is a comment: who wrote it, what, and what it replies to,
-// when, from where, and how many liked it, with a thumb to like it too.
+// when, from where, and how many liked it, with a thumb to like it too. Its
+// 12 DIPs of padding put the picture on the axis the lyrics' own padding puts
+// their words on.
 func (a *app) commentRow(c *ui.Context, cm *netease.Comment, now time.Time) {
 	ui.Row(c).Padding(12).Gap(12).Radius(12).AlignItems(ui.Start).Children(func() {
 		a.avatar(c, cm.User.AvatarURL, 34, white.Alpha(0.1))

@@ -13,6 +13,10 @@ import (
 
 var white = ui.RGB(255, 255, 255)
 
+// paneEnd is the room a pane leaves at its end, clear of its scroll bar, which
+// takes none of its own: every pane ends on the same edge.
+const paneEnd = 8
+
 var npSpring = ui.Animation{Spring: ui.SpringOptions{Duration: 450 * time.Millisecond, Bounce: 0.08}}
 
 // npSettle is how long Now Playing takes to come or go, its spring at rest.
@@ -151,12 +155,17 @@ func (a *app) nowPlayingBody(c *ui.Context, tr *netease.Track, art *artwork, acc
 			return
 		}
 
-		side := float32(math.Min(float64(w)*0.36, 440))
-		// The cover leaves room above it for the pane's tabs.
+		// The cover sets the width of the column beside the lyrics: the title,
+		// the progress bar and the controls under it begin on its edge, at every
+		// size. Shorter, the column stays wide enough for those controls, and
+		// the cover keeps to the edge rather than centering in the room left.
+		side := min(float32(math.Min(float64(w)*0.36, 440)), max(h-404, 260))
 		coverSize := min(side, h-404)
 		ui.Row(c).Grow(1).Padding(0, 72, 44, 72).Gap(72).AlignItems(ui.Stretch).Children(func() {
 			var coverTop float32
-			ui.Column(c).Width(side).Justify(ui.Center).Gap(0).Children(func() {
+			// Narrower, the title gives up room to the heart and the menu
+			// beside it, rather than run over them.
+			ui.Column(c).Width(side).Justify(ui.Center).Gap(0).MinWidth(0).Children(func() {
 				coverTop = ui.Box(c.Key("cover-top")).Height(0).LayoutBounds().Y
 				a.npCover(c, tr, art, coverSize)
 
@@ -427,7 +436,9 @@ func (a *app) lyricsPane(c *ui.Context, tr *netease.Track, h float32) {
 	}
 	lag := a.lyricGlide.step(c, &a.lyricScroll)
 
-	scroll := ui.Scroll(c.Key("lyrics")).Grow(1).TrackScroll(&a.lyricScroll).Padding(0, 8, h*0.5, 0)
+	// The 8 DIPs at its end keep the lines clear of the scroll bar, which
+	// takes no room of its own: the queue and the comments keep them too.
+	scroll := ui.Scroll(c.Key("lyrics")).Grow(1).TrackScroll(&a.lyricScroll).Padding(0, paneEnd, h*0.5, 0)
 	dim, quiet := a.quietShown(c, scroll, tr, lines, loaded)
 	if dim > 0.98 {
 		// Under the hot comment, gone, not drawn faint.
@@ -646,5 +657,5 @@ func (a *app) queuePane(c *ui.Context) {
 		if row.Clicked() && tr.Playable() && !playing {
 			pl.Jump(i)
 		}
-	}).Grow(1).Padding(8, 0, 40, 0).Gap(2)
+	}).Grow(1).Padding(8, paneEnd, 40, 0).Gap(2)
 }
