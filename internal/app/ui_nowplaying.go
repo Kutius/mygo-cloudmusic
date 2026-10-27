@@ -410,7 +410,7 @@ func (a *app) lyricsPane(c *ui.Context, tr *netease.Track, h float32) {
 				lyricsSkeleton(c, npShimmer(c))
 				return
 			}
-			ui.Text(c, "纯音乐，请欣赏").FontSize(24).FontWeight(700).TextColor(white.Alpha(0.4))
+			ui.Text(c, "纯音乐，请欣赏").Font(lyricsFont).FontSize(24).FontWeight(700).TextColor(white.Alpha(0.4))
 		})
 		a.quietCard(c, dim, h*0.18)
 		return
@@ -485,7 +485,7 @@ func (a *app) timedLines(c *ui.Context, scroll ui.Element, lines []lyrics.Line, 
 					text.Children(func() {
 						if on && len(l.Words) > 0 {
 							// The line sung lights up word by word as it is sung.
-							ui.RichText(c.Key("words")).FontSize(st.size).FontWeight(st.weight).LineHeight(st.lineHeight).LetterSpacing(-0.4).Children(func() {
+							ui.RichText(c.Key("words")).Font(lyricsFont).FontSize(st.size).FontWeight(st.weight).LineHeight(st.lineHeight).LetterSpacing(lyricsTracking * st.size).Children(func() {
 								for wi, wd := range l.Words {
 									lit := clamp01(float32((pos - wd.Start).Seconds() / max(0.05, (wd.End-wd.Start).Seconds())))
 									ui.Text(c.Key(wi), wd.Text).TextColor(white.Alpha(0.38 + 0.62*lit))
@@ -496,10 +496,10 @@ func (a *app) timedLines(c *ui.Context, scroll ui.Element, lines []lyrics.Line, 
 								c.After(40 * time.Millisecond)
 							}
 						} else {
-							ui.Text(c, l.Text).FontSize(st.size).FontWeight(st.weight).LineHeight(st.lineHeight).LetterSpacing(-0.4).TextColor(white)
+							ui.Text(c, l.Text).Font(lyricsFont).FontSize(st.size).FontWeight(st.weight).LineHeight(st.lineHeight).LetterSpacing(lyricsTracking * st.size).TextColor(white)
 						}
 						if l.Translation != "" {
-							ui.Text(c, l.Translation).FontSize(17).FontWeight(600).TextColor(white.Alpha(0.7))
+							ui.Text(c, l.Translation).Font(lyricsFont).FontSize(17).FontWeight(600).LetterSpacing(lyricsTracking * 17).TextColor(white.Alpha(0.7))
 						}
 					})
 				})

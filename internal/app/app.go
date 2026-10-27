@@ -201,6 +201,9 @@ func Run() error {
 	}
 	moveOldData()
 	a.useUpdater()
+	// Before any window: every text is laid out in the font the app ships,
+	// from the first frame.
+	registerFonts()
 	mygo.App.WhenReady(func() {
 		a.settings = loadSettings()
 		a.settings.applyAppearance()

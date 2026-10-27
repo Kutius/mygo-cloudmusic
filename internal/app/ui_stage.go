@@ -56,7 +56,7 @@ func stageShapes(c *ui.Context, l *lyrics.Line, f float32) []wordShape {
 	shapes := make([]wordShape, len(l.Words))
 	widths := make([]float32, len(l.Words))
 	for i, w := range l.Words {
-		widths[i], _ = c.MeasureText(0, ui.Span{Text: w.Text, Size: f, Weight: 800})
+		widths[i], _ = c.MeasureText(0, ui.Span{Text: w.Text, Size: f, Weight: 800, Font: lyricsFont})
 	}
 	for i := range l.Words {
 		ws := seed + float64(i)
@@ -107,7 +107,7 @@ func (a *app) stage(c *ui.Context, tr *netease.Track, accent ui.Color) {
 					stageSkeleton(c, npShimmer(c), f, w)
 					return
 				}
-				ui.Text(c, "纯音乐，请欣赏").FontSize(28).FontWeight(800).TextColor(white.Alpha(0.4))
+				ui.Text(c, "纯音乐，请欣赏").Font(lyricsFont).FontSize(28).FontWeight(800).TextColor(white.Alpha(0.4))
 			})
 			a.stageQuiet(c, dim, f, w)
 		})
@@ -149,10 +149,12 @@ func (a *app) stage(c *ui.Context, tr *netease.Track, accent ui.Color) {
 			// The translation, and the line coming next, along the foot.
 			ui.Column(c).Absolute().Left(0).Right(0).Bottom(24).AlignItems(ui.Center).Gap(8).PassThrough().Children(func() {
 				if cur >= 0 && lines[cur].Translation != "" {
-					ui.Text(c.Key("translation"), lines[cur].Translation).FontSize(18).FontWeight(600).TextColor(white.Alpha(0.72)).TextAlign(ui.Center)
+					ui.Text(c.Key("translation"), lines[cur].Translation).Font(lyricsFont).FontSize(18).FontWeight(600).
+						LetterSpacing(lyricsTracking * 18).TextColor(white.Alpha(0.72)).TextAlign(ui.Center)
 				}
 				if cur+1 < len(lines) {
-					ui.Text(c.Key("next"), lines[cur+1].Text).FontSize(14).TextColor(white.Alpha(0.32)).TextAlign(ui.Center).SingleLine()
+					ui.Text(c.Key("next"), lines[cur+1].Text).Font(lyricsFont).FontSize(14).
+						LetterSpacing(lyricsTracking * 14).TextColor(white.Alpha(0.32)).TextAlign(ui.Center).SingleLine()
 				}
 			})
 		})
@@ -257,13 +259,13 @@ func (a *app) stageWord(c *ui.Context, word lyrics.Word, s wordShape, pos time.D
 
 	box := ui.Box(c).MarginEnd(s.margin).Translate(x, y).Rotate(rotate).Scale(scale, scale).Opacity(opacity)
 	box.Children(func() {
-		text := ui.Text(c.Key("body"), word.Text).FontSize(f).FontWeight(800).NoWrap().TextColor(color)
+		text := ui.Text(c.Key("body"), word.Text).Font(lyricsFont).FontSize(f).FontWeight(800).NoWrap().TextColor(color)
 		if blur > 0.3 {
 			text.Blur(blur)
 		}
 		if glow > 0.01 {
 			// The glow: the word again, in light, blurred around it.
-			ui.Text(c.Key("glow"), word.Text).Absolute().Top(0).Left(0).FontSize(f).FontWeight(800).NoWrap().
+			ui.Text(c.Key("glow"), word.Text).Absolute().Top(0).Left(0).Font(lyricsFont).FontSize(f).FontWeight(800).NoWrap().
 				TextColor(accent.Alpha(0.85 * glow)).Blur(f * 0.2).PassThrough()
 		}
 	})
