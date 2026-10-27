@@ -5,6 +5,7 @@ import (
 	"image/png"
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 	"time"
 
@@ -15,8 +16,12 @@ import (
 )
 
 // The notch, turned off, shows itself as the first song plays, and only
-// then; its button keeps it on.
+// then; its button keeps it on. Only macOS greets, so elsewhere there is
+// nothing to check.
 func TestNotchGreetsOnce(t *testing.T) {
+	if runtime.GOOS != "darwin" {
+		t.Skip("the notch greets on macOS alone")
+	}
 	a := newTestApp()
 	a.settings = defaultSettings()
 	n := &notch{a: a, w0: 200, h0: 32, winW: notchOpenW + 60, winH: 240}
