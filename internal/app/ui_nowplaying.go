@@ -152,8 +152,13 @@ func (a *app) nowPlayingBody(c *ui.Context, tr *netease.Track, art *artwork, acc
 		}
 
 		side := float32(math.Min(float64(w)*0.36, 440))
-		// The cover leaves room above it for the pane's tabs.
-		coverSize := min(side, h-404)
+		// The cover leaves room above it for the tabs, starting as far
+		// under them as the wall's song does.
+		coverSize := min(side, h-436)
+		// The column is as wide as the cover, for the cover, what plays
+		// and the tabs over it to start at one edge, but wide enough for
+		// the controls.
+		side = max(coverSize, 280)
 		padX := npSideX(w)
 		reveal(npTabsRow(c, w), pointerIn).Children(func() { a.paneTabs(c) })
 		ui.Row(c).Grow(1).Padding(0, padX, 44, padX).Gap(72).AlignItems(ui.Stretch).Children(func() {
