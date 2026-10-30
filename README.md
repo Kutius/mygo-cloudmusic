@@ -2,6 +2,15 @@
 
 用 Go 和 [MyGo](https://github.com/egoist/mygo) 写的第三方网易云音乐桌面客户端，原生界面，无 WebView。
 
+## 与上游的差异
+
+本仓库基于上游 [egoist/mygo-cloudmusic](https://github.com/egoist/mygo-cloudmusic) 的最新 release（当前为 `v0.1.22`），只加入以下改动，其余与上游一致：
+
+- **内置字体**：界面和歌词改用 Inter 与 Noto Sans SC，不再依赖系统字体，macOS 与 Windows 的显示更一致。字体已做子集化优化（仅保留常用字符，缺失字符回退系统字体），字体资源本身约 8.0 MiB；压缩后 Windows 安装包约从 6.3 MB 增大到 9.8 MB（约 +3.5 MB）。
+- **搜索框高度**：固定输入框行高，避免中文输入时裁切占位文字、输入框高度跳动。
+- **音量滑块**：轨道居中，喇叭按钮挂在轨道左侧，与上方封面、播放按钮的中轴对齐。
+- **刘海测试**：刘海相关测试只在 macOS 运行，Windows/Linux 跳过。
+
 ## 功能
 
 - 扫码登录，登录态保存在系统凭据存储中
