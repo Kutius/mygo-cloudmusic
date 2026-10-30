@@ -286,26 +286,24 @@ func (a *app) muteButton(c *ui.Context, color ui.Color) {
 	}
 }
 
-// volumeSlider is a slim slider with the speaker before it, which mutes.
+// volumeSlider is a slim slider, as wide as it is given. Centered in a column,
+// its track is too, which is what Now Playing lines it up by.
 func (a *app) volumeSlider(c *ui.Context, color, track ui.Color, width float32) {
-	ui.Row(c).Gap(4).AlignItems(ui.Center).Children(func() {
-		a.muteButton(c, color)
-		s := ui.SliderBase(c.Key("volume"), &a.volume, 0, 1).Width(width).Height(16).FocusRing(false).Label("音量")
-		if s.Changed() {
-			a.pl.SetVolume(a.volume)
-		}
-		hot := s.Hovered() || s.Pressed()
-		thick := float32(4)
-		if hot {
-			thick = 5
-		}
-		thick = s.AnimateTo("thick", thick, ui.Snappy)
-		v := float32(a.volume)
-		s.Draw(func(p *ui.Painter, r ui.Rect) {
-			y := r.Y + (r.H-thick)/2
-			p.Fill(ui.Rect{X: r.X, Y: y, W: r.W, H: thick}, track, thick/2)
-			p.Fill(ui.Rect{X: r.X, Y: y, W: max(thick, r.W*v), H: thick}, color, thick/2)
-		})
+	s := ui.SliderBase(c.Key("volume"), &a.volume, 0, 1).Width(width).Height(16).FocusRing(false).Label("音量")
+	if s.Changed() {
+		a.pl.SetVolume(a.volume)
+	}
+	hot := s.Hovered() || s.Pressed()
+	thick := float32(4)
+	if hot {
+		thick = 5
+	}
+	thick = s.AnimateTo("thick", thick, ui.Snappy)
+	v := float32(a.volume)
+	s.Draw(func(p *ui.Painter, r ui.Rect) {
+		y := r.Y + (r.H-thick)/2
+		p.Fill(ui.Rect{X: r.X, Y: y, W: r.W, H: thick}, track, thick/2)
+		p.Fill(ui.Rect{X: r.X, Y: y, W: max(thick, r.W*v), H: thick}, color, thick/2)
 	})
 }
 

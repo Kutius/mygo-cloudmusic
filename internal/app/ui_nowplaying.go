@@ -195,7 +195,14 @@ func (a *app) nowPlayingBody(c *ui.Context, tr *netease.Track, art *artwork, acc
 				ui.Box(c).Margin(14, 0, 18, 0).Children(func() {
 					a.transport(c, white, white.Alpha(0.45), accent, 28)
 				})
-				ui.Row(c).Justify(ui.Center).Children(func() {
+				// The speaker hangs out past the track's left end rather than
+				// taking room in the row, so the track itself centers on the axis
+				// of the cover and the button above it, as Apple's does: a short
+				// track, its speaker close by, not a bar across the column.
+				ui.Row(c).Justify(ui.Center).AlignItems(ui.Center).Children(func() {
+					ui.Box(c).Width(0).Height(32).Children(func() {
+						ui.Row(c).Absolute().Right(10).Center().Children(func() { a.muteButton(c, white.Alpha(0.7)) })
+					})
 					a.volumeSlider(c, white.Alpha(0.7), white.Alpha(0.18), 180)
 				})
 			})
