@@ -102,8 +102,13 @@ func (a *app) searchField(c *ui.Context) {
 	field.Children(func() {
 		ui.Icon(c, iconSearch).Size(14, 14).TextColor(p.muted)
 		cb := ui.ComboboxBase(c.Key("search"), &a.query)
+		// The line box is fixed: an input takes the height of the line its
+		// text lays out in, and an empty one lays out in Inter's, while its
+		// placeholder and its Chinese draw in Noto Sans SC, whose line is
+		// taller. Left to that, the field clipped the bottom of its
+		// placeholder and grew by 3 DIPs as Chinese was typed into it.
 		in := cb.Input.Bind(&a.searchBox).Grow(1).MinWidth(0).
-			Placeholder("搜索歌曲、歌手、播客").FontSize(13).Label("搜索")
+			Placeholder("搜索歌曲、歌手、播客").FontSize(13).FixedLineHeight(19).Label("搜索")
 		q := strings.TrimSpace(a.query)
 		s := &a.suggestions
 		switch {
