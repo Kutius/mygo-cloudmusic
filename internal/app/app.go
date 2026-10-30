@@ -200,6 +200,9 @@ func Run() error {
 	}
 	moveOldData()
 	a.useUpdater()
+	// Before any window: the lyrics draw in the font the app ships, which
+	// they must be laid out with from the first frame.
+	registerFonts()
 	mygo.App.WhenReady(func() {
 		a.settings = loadSettings()
 		a.settings.applyAppearance()

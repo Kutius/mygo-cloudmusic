@@ -18,6 +18,8 @@ func (a *app) view(c *ui.Context) {
 	p := a.pal
 	t.Accent, t.AccentText = p.accent, p.onAccent
 	t.Selection = p.accent.Alpha(0.3)
+	// The interface draws in Inter, in Noto Sans SC for its Chinese.
+	t.Font = uiFont
 	c.SetTheme(&t)
 
 	a.shortcuts(c)
